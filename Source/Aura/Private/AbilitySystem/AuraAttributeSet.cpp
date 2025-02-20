@@ -10,9 +10,9 @@
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
-	InitHealth(25.f);
+	InitHealth(50.f);
 	InitMaxHealth(100.f);
-	InitMana(5.f);
+	InitMana(10.f);
 	InitMaxMana(50.f);
 }
 
@@ -20,10 +20,37 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	
+}
+
+
+
+void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	
+}
+
+void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+{
+}
+
+
+void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
+{
+	
+}
+
+void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+{
 }
 
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -54,17 +81,9 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp(NewValue ,0.f, GetMaxHealth());
 	}
-	if (Attribute == GetMaxHealthAttribute())
-	{
-		if (NewValue < 0) NewValue = 0;
-	}
 	if (Attribute == GetManaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue ,0.f, GetMaxMana());
-	}
-	if (Attribute == GetMaxManaAttribute())
-	{
-		if (NewValue < 0) NewValue = 0;
 	}
 }
 
@@ -108,5 +127,16 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
-	
+
+	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+	}
+	if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
 }
+
+
+
