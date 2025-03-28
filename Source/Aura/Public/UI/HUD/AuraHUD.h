@@ -35,7 +35,7 @@ private:
 	TSubclassOf<UUserWidget> OverlayWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UOverlayWidgetController> OverlayWidgetController ;
+	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UOverlayWidgetController> OverlayWidgetControllerClass;
