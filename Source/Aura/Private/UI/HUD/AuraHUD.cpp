@@ -5,6 +5,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "UI/Widget/AuraUserWidget.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& widgetControllerParams)
@@ -13,15 +14,27 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 	
 	OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 	OverlayWidgetController->SetWidgetControllerParams(widgetControllerParams);
-
 	OverlayWidgetController->BindCallbacksToDependencies();
 	
 	return OverlayWidgetController;
 	
 }
 
+UAttributeMenuWidgetController* AAuraHUD::GetAttributeMenuWidgetController(
+	const FWidgetControllerParams& widgetControllerParams)
+{
+	if (AttributeMenuWidgetController != nullptr) return AttributeMenuWidgetController;
+
+	AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributeMenuWidgetControllerClass);
+	AttributeMenuWidgetController->SetWidgetControllerParams(widgetControllerParams);
+	AttributeMenuWidgetController->BindCallbacksToDependencies();
+	
+	return AttributeMenuWidgetController;
+	
+}
+
 void AAuraHUD::InitOverlay(APlayerController* playerController, APlayerState* playerState,
-	UAbilitySystemComponent* AbilitySystemComponent, UAttributeSet* AttributeSet)
+                           UAbilitySystemComponent* AbilitySystemComponent, UAttributeSet* AttributeSet)
 {
 
 	checkf(OverlayWidgetClass, TEXT("Overlay Widget Class Uninitialized. Please fill out BP_AuraHUD"));
