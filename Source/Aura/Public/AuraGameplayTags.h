@@ -41,9 +41,16 @@ public:
 	FGameplayTag Attribute_Vital_Heath;
 	FGameplayTag Attribute_Vital_Mana;
 	/** End Vital Attributes*/
-	
-protected:
 
+	/** Input */
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_1;
+	FGameplayTag InputTag_2;
+	FGameplayTag InputTag_3;
+	FGameplayTag InputTag_4;
+	/** End Input */
+	
 private:
 	static FAuraGameplayTags GameplayTags;
 	
