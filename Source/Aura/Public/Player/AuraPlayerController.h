@@ -39,6 +39,7 @@ private:
 	
 	void CursorTrace();
 
+	FHitResult CursorHit;
 	TScriptInterface<IEnemyInterface> LastActor;
 	TScriptInterface<IEnemyInterface> ThisActor;
 
@@ -66,6 +67,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
+
+	void AutoRun();
 };
 
 
