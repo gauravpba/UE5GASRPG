@@ -17,6 +17,7 @@ void UTargetDataUnderMouse::Activate()
 	{
 		SendMouseCursorData();
 	}
+	else
 	{
 		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
 		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();

@@ -1,7 +1,7 @@
 // Copyright Gaurav Prativadi
 
 #include "Character/AuraCharacterBase.h"
-
+#include "MotionWarpingComponent.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 AAuraCharacterBase::AAuraCharacterBase()

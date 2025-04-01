@@ -7,7 +7,7 @@
 #include "Interaction/CombatInterface.h"
 
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector CursorData)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
@@ -15,12 +15,12 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector CursorData)
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo()))
 	{
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		Rotation.Pitch = 0;
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 		APawn* InstigatingPawn = Cast<APawn>(GetOwningActorFromActorInfo());
-
-		// TODO: Set projectile rotation		
-		
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 				ProjectileClass,
 				SpawnTransform,
