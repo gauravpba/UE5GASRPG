@@ -7,13 +7,9 @@
 #include "Interaction/CombatInterface.h"
 
 
-void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
-                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
-                                           const FGameplayEventData* TriggerEventData)
+void UAuraProjectileSpell::SpawnProjectile(const FVector CursorData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 	
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo()))
@@ -23,17 +19,26 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 		SpawnTransform.SetLocation(SocketLocation);
 		APawn* InstigatingPawn = Cast<APawn>(GetOwningActorFromActorInfo());
 
-		// TODO: Set projectile rotation
+		// TODO: Set projectile rotation		
 		
 		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
-        		ProjectileClass,
-        		SpawnTransform,
-        		GetOwningActorFromActorInfo(),
-        		InstigatingPawn,
-        		ESpawnActorCollisionHandlingMethod::AlwaysSpawn );
+				ProjectileClass,
+				SpawnTransform,
+				GetOwningActorFromActorInfo(),
+				InstigatingPawn,
+				ESpawnActorCollisionHandlingMethod::AlwaysSpawn );
 
 		// TODO: Give projectile a gameplay effect spec for causing damage.
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
+}
+
+void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
+                                           const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+                                           const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	
 }
