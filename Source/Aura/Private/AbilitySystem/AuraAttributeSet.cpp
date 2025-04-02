@@ -184,8 +184,18 @@ void UAuraAttributeSet::SetEffectProperties(const struct FGameplayEffectModCallb
 	{
 		EffectProperties.TargetAvatarActor = Data.Target.GetAvatarActor();
 		EffectProperties.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(EffectProperties.TargetAvatarActor);
-		EffectProperties.TargetPlayerController =  Data.Target.AbilityActorInfo->PlayerController.Get();
-		EffectProperties.TargetCharacter = EffectProperties.TargetPlayerController->GetCharacter();
+		EffectProperties.TargetPlayerController = EffectProperties.TargetASC->AbilityActorInfo->PlayerController.Get();
+		if (EffectProperties.TargetPlayerController == nullptr && EffectProperties.TargetAvatarActor != nullptr)
+		{
+			if (const APawn* Pawn = Cast<APawn>(EffectProperties.TargetAvatarActor))
+			{
+				EffectProperties.TargetPlayerController = Cast<APlayerController>(Pawn->GetController());
+			}
+		}
+		if (EffectProperties.TargetPlayerController != nullptr)
+		{
+			EffectProperties.TargetCharacter = EffectProperties.TargetPlayerController->GetCharacter();
+		}
 	}
 }
 
@@ -199,6 +209,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
+		UE_LOG(LogTemp, Warning, TEXT("Changed Health on [%s], Health : [%f]"), *Props.TargetAvatarActor->GetName(), GetHealth());
 	}
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
